@@ -1,0 +1,11 @@
+:\Users\Aluno\Downloads\projetoVideo-tds2>npm init -y
+
+C:\Users\Aluno\Downloads\projetoVideo-tds2>npm install node
+
+C:\Users\Aluno\Downloads\projetoVideo-tds2>npm install postgres
+
+C:\Users\Aluno\Downloads\projetoVideo-tds2>npm install dotenv
+
+C:\Users\Aluno\Downloads\projetoVideo-tds2>npm install @neondatabase/serverless
+
+C:\Users\Aluno\Downloads\projetoVideo-tds2>npm install @fastify/cors

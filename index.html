@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang = "en">
+<head>
+    <meta charset="UTF-8">
+    <meta name= "viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Videos</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <h1>cadastro de Video</h1>
+    <hr/>
+
+    <form id="video-form">
+        <input type="text" id="title" placeholder="Título" required/>
+        <textarea  id="description" placeholder="Duração" required></textarea>
+        <input type="number" id="duration" placeholder="Duração" required>
+    </form>
+    <hr/>
+    <h2>Lista de Vídeos</h2>
+    <div id="videos-container"></div>
+
+    <script>
+        const form = document.getElementById('video-form');
+        const container = getElementById('videos-container');
+
+        const apiUrl = 'http://localhost:3333/videos';
+        async function carregarVideos(){
+            const res = await fetch(apiUrl);
+            const video = await res.json()
+
+            container.innerHTML = '';
+            await video.forEach(element => {
+                const card = document.
+                createElement('div');
+                card.className = 'video-item'
+                card.innerHTML=`
+                    <h3>${video.title}</h3>
+                    <p>${video.description}</p>
+                    <p> Duração: ${video.duration} min</p>
+
+                    <button onclick='deletarVideo('${video.id}')'>Excluir</button>
+                    <button onclick='editarVideo('${video.id}')'>Editar</button>
+                `;
+                container.appendChild(card)
+            });
+        }
+
+        async function  deletarVideo(id){
+            await fetch(`${apiUrl}/${id}`,{
+                method: 'DELETE'
+            });
+            carregarVideos();
+        }
+
+        form.addEventListener('submit', async(e) =>{
+            e.preventDefault();
+            const title = document.getElementById('title').value;
+            const description = document.getElementById('description').value;
+            const duration = parseInt(document.getElementById('duration').value);
+            await fetch(apiUrl, {
+                method: 'PUT',
+                headers: {
+                    'content-Type':'application/json'
+                },
+                body:JSON.stringify({title,description,duration})
+            });
+
+            form.reset();
+            carregarVideos();
+        })
+
+        async function editarVideo(id, title, description, duration){
+            const novoTitulo = prompt("Novo Título: ", title);
+            const novaDescricao = prompt("Novo Descrição: ", description);
+            const novaDuracao = prompt("Novo Duração: ", duration);
+
+            if(!novoTitulo || !novaDescricao || !novaDuracao) return;
+            
+            await fetch(`${apiUrl}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type':'application/json'
+                },
+                body: JSON.stringify({
+                    title: novoTitulo,
+                    description: novaDescricao,
+                    duration: parseInt(novaDuracao)
+                })
+            });
+
+            carregarVideos();
+        }
+        carregarVideos();
+
+    </script>
+
+</body>
+</html>
